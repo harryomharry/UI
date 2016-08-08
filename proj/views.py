@@ -16,9 +16,9 @@ import decimal
 from .models import current
 
 #Database setup
-mysqlhost = "localhost"
-mysqluser = "root"
-mysqlpw = "135@$^Ate"
+mysqlhost = "djangomysqltest.ckeqhtrt4wyd.us-west-2.rds.amazonaws.com:3306"
+mysqluser = "morrisons"
+mysqlpw = "morrisons"
 mysqldb = "usf"
 
 # date handler to convert mysql dates into json readable dates
