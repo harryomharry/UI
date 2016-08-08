@@ -16,7 +16,7 @@ import decimal
 from .models import current
 
 #Database setup
-mysqlhost = "djangomysqltest.ckeqhtrt4wyd.us-west-2.rds.amazonaws.com:3306"
+mysqlhost = "djangomysqltest.ckeqhtrt4wyd.us-west-2.rds.amazonaws.com"
 mysqluser = "morrisons"
 mysqlpw = "morrisons"
 mysqldb = "usf"
