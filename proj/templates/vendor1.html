@@ -1,0 +1,199 @@
+</html>
+<!doctype html>
+<html ng-app="crudapp">
+<head>
+    <title>Campaign Details</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+
+</head>
+<style>
+.page-header { vertical-align: bottom;}
+h1 {color:#4DA820;
+    font: "Helvetica";
+    font-size: 60px;
+  }
+</style>
+ 
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="https://www.precima.com/">Precima</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Morrison
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Campaigns</a></li>
+
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>
+  
+<div class="container">
+  <h3><strong>Campaign Details for campaign {{selected_camp}}</strong></h3>
+</div>
+
+<div class="container">
+<body ng-controller="productController">
+
+  <div class="jumbotron" >
+  <h3><strong>Vendor Information</strong></h3>
+  <hr>
+    <div ng-show="vtable">
+      {% verbatim %}
+      
+      <table class="table table-striped table-bordered table-hover table-condensed table-responsive"  
+    cellpadding="5" cellspacing="0" border="1">
+        <tbody>
+          <tr>
+            <td>
+              <label>Submission Date:</label> 
+              <input class="form-control" id="focusedInput" style="width:250px" type="date" ng-model="subdate">
+            </td>
+            <td>
+              <label>Client Number:</label>
+              <input class="form-control" id="focusedInput" style="width:250px" type="number" ng-model="clientnum">
+            </td>
+          </tr>
+          <tr>
+            <td><label>Client Name:</label> {{vendor[0].clientName}}</td>
+            <td><label>Precima Contact Name:</label> {{vendor[0].precimaContactName}}</td>
+          </tr>
+          <tr>
+            <td><label>Precima Contact Number:</label> {{vendor[0].precimaContactNumber}}</td>
+            <td><label>Precima Contact Email:</label> {{vendor[0].precimaContactEmail}}</td>
+          </tr>
+          <tr>
+            <td><label>Supplier Contact Name:</label> {{vendor[0].supplierContactName}}</td>
+            <td><label>Supplier Contact Number:</label> {{vendor[0].supplierContactNumber}}</td>
+          </tr>
+          <tr>
+            <td><label>Supplier Contact Email:</label> {{vendor[0].supplierContactEmail}}</td>
+            <td><label>Verifier Name:</label> {{vendor[0].verifierName}}</td>
+          </tr>
+          <tr>
+            <td><label>Verified Date:</strong> {{vendor[0].verifiedDate}}</td>
+            <td><label>Precima Vendor ID:</label> {{vendor[0].precimaVendorID}}</td>
+          </tr>
+          <tr>
+            <td><label>Precima Rec Insert Date:</label> {{vendor[0].precRecInsertDate}}</td>
+            <td><label>Max Campaign Client Fee:</label> {{vendor[0].maxCampaignClientFee}}</td>
+          </tr>
+          <tr>
+            <td><label>Cost Per Delivered Offer:</label> {{vendor[0].costPerDeliveredOffer}}</td>
+            <td><label>Total Client Fee:</label> {{vendor[0].totalClientFee}}</td>
+          </tr>
+        </tbody>
+      </table>
+      {% endverbatim %}
+      <button type="button" class="btn btn-info" ng-click="vendor()">Edit Vendor Information</button>
+    </div>
+
+    <div ng-show="vblank">
+      There are currently no records
+      <br>
+      <br>
+      <button type="button" class="btn btn-info" ng-click="vendor()">Add Vendor Information</button>
+    </div>
+  </div>
+
+  <div class="jumbotron">
+    <h3><strong>Offer Information</strong></h3>
+    <hr>
+  <div ng-show="otable">
+      {% verbatim %}
+      
+      <table class="table table-striped table-bordered table-hover table-condensed table-responsive"  
+    cellpadding="5" cellspacing="0" border="1">
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+      {% endverbatim %}
+      <button type="button" class="btn btn-info" ng-click="vendor()">Edit Vendor Information</button>
+    </div>
+
+    <div ng-show="oblank">
+      There are currently no records
+      <br>
+      <br>
+      <button type="button" class="btn btn-info" ng-click="vendor()">Add Offers</button>
+    </div>
+  </div>
+  
+</body>
+
+
+</div>
+<div class="container">
+    <img src="https://www.precima.com/application/themes/Precima/images-svg/logo-barcode-only.svg"  width="304" height="236" align="left">
+</div>
+
+
+<script type="text/javascript">
+    
+  <!-- Define crudapp as a Angular application. -->
+  var crudapp = angular.module('crudapp', []);
+  
+  <!-- Application controller for the module. -->
+  crudapp.controller('productController', function($scope){
+      
+    <!-- Populate table with products data -->
+    $scope.vtable=false; 
+    $scope.vblank=false;
+    $scope.otable=false; 
+    $scope.oblank=false;
+
+    $scope.vendor = {{vendor_info|safe}};
+    $scope.offers = {{offer_info|safe}};
+
+    var vlen=$scope.vendor.length;
+    if (vlen!=0){
+      $scope.vtable=true; 
+      $scope.vblank=false;
+    }
+    else{
+      $scope.vtable=false; 
+      $scope.vblank=true;
+    }
+
+    var olen=$scope.offers.length;
+    if (olen!=0){
+      $scope.otable=true; 
+      $scope.oblank=false;
+    }
+    else{
+      $scope.otable=false; 
+      $scope.oblank=true;
+    }
+
+});
+</script>
+
+
+<script>
+
+</script>
+
+
+</html>

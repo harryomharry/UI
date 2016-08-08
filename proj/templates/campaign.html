@@ -1,0 +1,526 @@
+</html>
+<!doctype html>
+<html ng-app="crudapp">
+<head>
+    <title>Campaigns</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+
+</head>
+<style>
+.page-header { vertical-align: bottom;}
+h1 {color:#4DA820;
+    font: "Helvetica";
+    font-size: 60px;
+  }
+
+
+</style>
+ 
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="http://127.0.0.1:8000/home">Home</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Clients
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="http://127.0.0.1:8000/Morrison/campaigns">Morrisons</a></li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="/logout/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+    </ul>
+  </div>
+</nav>
+  
+<div class="container">
+  <h2><strong>Campaign Information</strong></h2>
+
+
+</div>
+
+<div class="container">
+<body ng-controller="productController" ng-cloak onload="document.refresh();">
+
+ 
+    <!-- Table to output data -->
+  <div class='page-header'>
+    <div class='btn-toolbar pull-right'>
+      <div class='btn-group'>
+        <button type="button" class="btn btn-danger btn" ng-click="sub_data1();wipe();">
+          <span class="glyphicon glyphicon-floppy-disk"></span> Save Session
+        </button>
+      </div>
+    </div>
+    <h3>Existing Campaigns</h3>
+  </div>
+
+    
+
+    {% verbatim %}
+    <table class="table table-striped table-bordered table-hover table-condensed table-responsive"  
+    cellpadding="5" cellspacing="0" border="1">
+      <thead>
+        <tr>
+          <th>Row</th>
+          <th>Precima Campaign ID</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Campaign Type</th>
+          <th># of Suppliers</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="campaign in campaign_info">
+          <td>{{campaign.id = $index + 1}}</td>
+          <td>{{campaign.precimaCampaignID}}</td>
+          <td>{{campaign.startDate | limitTo:10}}</td>
+          <td>{{campaign.endDate | limitTo:10}}</td>
+          <td>{{campaign.campaignTypeDesc}}</td>
+          <td>{{campaign.counter}}</td>
+          <td>
+            <div class="btn-group-vertical">
+              <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#selectModal" ng-click="sel_camp(campaign.id)">
+                <span class="glyphicon glyphicon-menu-right"></span>
+              </button>
+            </div>                    
+          </td>
+        </tr>
+    </tbody>  
+  </table>
+{% endverbatim %}
+<br>
+<br>
+<div class="modal fade" id="selectModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Confirm Seletion</h4>
+        </div>
+        {% verbatim %}
+        <div class="modal-body">
+          <p>Would you like to continue with campaign {{data}}?</p>
+        </div>
+        {% endverbatim %}
+        <div class="modal-footer">
+        {% csrf_token %}
+          <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="sub_data()" onclick="redirect()">Yes</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  
+
+
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Create New Campaign</button>
+<div id="demo" class="collapse">
+  <div class="jumbotron">
+  <h3><strong>Create New Campaign</strong></h3>
+    <form name="offerform" method="post" role=form>
+      <label>Start Date:</label>
+      <input class="form-control" id="focusedInput" type="date"  ng-model="start_date" required/>
+      <span style="color:red;" class="help-block" id="sd_error"></span>
+      <br>
+
+      <label>End Date:</label>
+      <input class="form-control" id="focusedInput" type="date" ng-model="end_date" />
+      <span style="color:red;" class="help-block" id="ed_error"></span>
+      <br>
+      
+      <label>Campaign Type:</label>
+      <div class="input-group">
+
+        <input class="form-control" id="why" type="text"  ng-model="campaignt" />
+
+        <div class="input-group-addon" data-toggle="modal" data-target="#searchModal">
+          <span class="glyphicon glyphicon-search"></span>
+        </div>
+      </div>
+
+      <span style=" color:red;" class="help-block" id="o_error"></span>
+      
+      
+      
+
+      <br>
+      <br>
+
+      <button type="button" class="btn btn-info" ng-click="add()">Create Campaign</button>
+      <span style="color:red;" class="help-block" id="camp_error"></span> 
+    </form>
+  </div>
+</div>
+
+
+  <div class="modal fade" id="searchModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Campaign Type</h4>
+        </div>
+        {% verbatim %}
+        <div class="modal-body">
+          <table class="table table-striped table-bordered table-hover table-condensed table-responsive"  
+    cellpadding="5" cellspacing="0" border="1">
+            <thead>
+              <tr>
+                <th>Row</th>
+                <th>Campaign Type</th>
+                <th>Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in campaignlist">
+                <td>{{item.id = $index + 1}}</td>
+                <td>{{item.campaignType}}</td>
+                <td>{{item.campaignName}}</td>
+                <td>
+                  <div class="btn-group-vertical">
+                    <button type="button" class="btn btn-success btn-xs" data-toggle="modal"  ng-click="sel_type(item.id)" data-backdrop="false" data-dismiss="modal">Select Campaign</button>
+                </div>                    
+                </td>
+              </tr>
+            </tbody>  
+          </table>
+        </div>
+        {% endverbatim %}
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="container">
+    <img src="https://www.precima.com/application/themes/Precima/images-svg/logo-barcode-only.svg"  width="304" height="236" align="left">
+  </div>
+    
+
+</body>
+</div>
+
+<input type="hidden" id="refreshed" value="no">
+<script type="text/javascript">
+  onload=function(){
+    var e=document.getElementById("refreshed");
+    if(e.value=="no")e.value="yes";
+    else{e.value="no";location.reload();}
+}
+</script>
+
+<script type="text/javascript">
+    
+  <!-- Define crudapp as a Angular application. -->
+  var crudapp = angular.module('crudapp', []);
+  
+  <!-- Application controller for the module. -->
+  crudapp.controller('productController', function($scope){
+      
+    <!-- Populate table with products data -->
+
+    //grabbing data from django
+    $scope.campaign_info = {{ campaign_info|safe}};
+    $scope.campaigns = {{ campaigns|safe}};
+    $scope.campaignlist = {{campaign_list|safe}}
+
+    $scope.new_campaigns = [];
+    $scope.data = [];
+
+
+    //<!-- Select the row of data and update the form function -->
+
+    
+    $scope.sel_camp = function(id){
+        localStorage.setItem('favoriteflavor','');
+        $scope.data = $scope.campaign_info[id-1].precimaCampaignID;
+    };
+
+    $scope.sel_type = function(id){
+        $scope.campaignt = $scope.campaignlist[id-1].campaignName;
+    };
+
+
+    //ajax to backend, using campaign selected
+    //"data" is [] because we are only sending imformation about which campaign we are accessing
+    $scope.sub_data = function(){
+        
+        data = {"data": [], "selected":$scope.data};
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            url: '/campaign_receive/',
+            data: JSON.stringify(data),
+            success: function(result) {
+                    document.write(result)
+                    }
+        });
+    };
+
+    //ajax to backend using all the new data inserted
+    //"selected" refers to the campaign that is selected, which is none in this case
+    $scope.sub_data1 = function(){
+        
+        data = {"data": $scope.new_campaigns, "selected":"none"};
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            url: '/campaign_receive/',
+            data: JSON.stringify(data),
+            success: function(result) {
+                    document.write(result)
+                    }
+        });
+    };
+
+    $scope.wipe = function(){
+      $scope.new_campaigns = [];
+        
+    };
+
+    
+    //function to add new campaign
+    <!-- Add a new product function -->
+    $scope.add = function(id){
+        document.getElementById("sd_error").  innerHTML = "";
+        document.getElementById("ed_error").  innerHTML = "";
+        document.getElementById("o_error"). innerHTML = "";
+        
+
+        var error = false;
+        var mult_err1 = false;
+        if (!$scope.start_date){
+            document.getElementById("sd_error").innerHTML = "This is a required field.";
+            mult_err1 = true;
+        }
+
+        if (!$scope.end_date){
+            document.getElementById("ed_error").innerHTML = "This is a required field.";
+            mult_err1 = true;
+        }
+
+        if (!$scope.campaignt){
+            document.getElementById("o_error").innerHTML = "This is a required field.";
+            error = true;
+        }
+
+
+        if (error == false){
+            var camptdes = $scope.campaignt.toLowerCase();
+            var camptlist = ["loyalty driver", "branded dm", "supplier showcase"]
+    
+            if (camptlist.indexOf(camptdes)== -1){
+                document.getElementById("o_error").innerHTML = "Please use a valid campaign type or use the search to find one.";
+                error = true;
+            }
+        }
+        var campt;
+        var camptdest;
+
+        if (camptdes == 'loyalty driver'){
+          campt = 'ct1';
+          camptdest = 'Loyalty Driver';
+        }else if (camptdes == "branded dm"){
+          campt = 'ct2';
+          camptdest = 'Branded DM';
+        }else{
+          campt = 'ct3';
+          camptdest = 'Supplier Showcase';
+        }
+
+        if (mult_err1 == false){
+            var sd = new Date($scope.start_date.getTime());
+            var ed = new Date($scope.end_date.getTime());
+            if (ed<=sd){
+                document.getElementById("ed_error").innerHTML = "End date cannot be before or similar to start date.";
+                mult_err1 = true;
+            }
+        }
+
+        if (error == false && mult_err1==false){
+          var uid = '' + campt
+            + '-'
+            + $scope.start_date.getFullYear() 
+            + ('0' + ($scope.start_date.getMonth(0) + 1)).slice(-2)
+            + ('0' + $scope.start_date.getDate(0)).slice(-2)
+            + '-'
+            + $scope.end_date.getFullYear()    
+            + ('0' + ($scope.end_date.getMonth(0) + 1)).slice(-2)
+            + ('0' + $scope.end_date.getDate(0)).slice(-2)
+
+          if ($scope.campaigns.indexOf(uid) > -1){
+            document.getElementById("camp_error").innerHTML = "This campaign already exists. Please ensure you insert a new campaign.";
+            error = true;
+          }
+        }
+        
+        if (error == false){
+          document.getElementById("sd_error").  innerHTML = "";
+          document.getElementById("ed_error").  innerHTML = "";
+          document.getElementById("o_error"). innerHTML = "";
+
+        
+        var uid = '' + campt
+          + '-'
+          + $scope.start_date.getFullYear() 
+          + ('0' + ($scope.start_date.getMonth(0) + 1)).slice(-2)
+          + ('0' + $scope.start_date.getDate(0)).slice(-2)
+          + '-'
+          + $scope.end_date.getFullYear()    
+          + ('0' + ($scope.end_date.getMonth(0) + 1)).slice(-2)
+          + ('0' + $scope.end_date.getDate(0)).slice(-2)
+          
+          
+        var start='' + $scope.start_date.getFullYear() + "-"
+          + ('0' + ($scope.start_date.getMonth(0) + 1)).slice(-2) + "-"
+          + ('0' + $scope.start_date.getDate(0)).slice(-2)
+          + "T00:00:00"
+        var end='' + $scope.end_date.getFullYear() + "-"  
+          + ('0' + ($scope.end_date.getMonth(0) + 1)).slice(-2) + "-"
+          + ('0' + $scope.end_date.getDate(0)).slice(-2)
+          + "T00:00:00"
+
+          $scope.campaign_info.push({
+              precimaCampaignID: uid,
+              startDate:start,
+              endDate:end,
+              campaignType:campt,
+              campaignTypeDesc:camptdest,
+              counter : '0'
+          });
+
+          $scope.new_campaigns.push({
+              precimaCampaignID: uid,
+              startDate:start,
+              endDate:end,
+              campaignType:campt,
+              campaignTypeDesc:camptdest,
+              counter : '0'
+          });
+
+          $scope.campaigns.push(uid);
+
+
+
+        <!-- Resets the form -->
+        $scope.ucid = '';
+        $scope.start_date = '';
+        $scope.end_date = '';
+        $scope.campaignt = '';
+
+        
+    
+    };
+    }
+
+    <!-- Function finds unique product data based on its id -->
+    function getSelectedIndex(id){
+        for(var i=0; i<$scope.listProducts.length; i++)
+            if($scope.listProducts[i].id==id)
+                return i;
+            return -1;  
+    };
+
+
+    //has to be included for ajax to work
+    function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+    //has to be included for ajax to work
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+      crossDomain: false, // obviates need for sameOrigin test
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type)) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }         
+  })
+});
+</script>
+
+
+<script>
+         $(function() {
+            var availableTutorials = [
+               "Loyalty Driver",
+               "Branded DM",
+               "Supplier Showcase"
+            ];
+            $( "#why" ).autocomplete({
+               source: availableTutorials
+            });
+         });
+</script>
+
+<script type="text/javascript">
+  function redirect() {
+
+   setTimeout(function(){
+    window.location.href='suppliers';
+  },1000);
+    // cancel default behavior
+  };
+
+</script>
+
+<script type="text/javascript">
+$(window).on("navigate", function (event, data) {
+  var direction = data.state.direction;
+  if (direction == 'back') {
+    // do something
+  }
+  if (direction == 'forward') {
+    // do something else
+  }
+});
+</script>
+
+
+</html>

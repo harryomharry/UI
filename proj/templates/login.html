@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Is anyone getting tired of repeatedly entering the header over and over?? -->
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    </head>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="https://www.precima.com/">Precima</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="https://www.loyalty.com/"> LoyaltyOne</a></li>
+    </ul>
+  </div>
+</nav>
+
+
+
+<style>
+.page-header { vertical-align: bottom;}
+h1 {color:#4DA820;
+    font: "Helvetica";
+    font-size: 60px;
+  }
+
+input {
+    width: 15% !important;
+    margin: 0 42.5%;
+}
+
+#sub{
+    width: 15% !important;
+    margin: 0 42.5%;
+}
+
+#headr{
+    width: 20% !important;
+    margin: 0 42.5%;
+}
+
+.jumbotron {
+    width : 50% !important;
+    margin: 0 25%;
+}
+
+</style>
+
+    <body>
+        <br>
+
+
+        <br>
+        <br>
+
+
+
+        <form id="login_form" method="post" action="/login/">
+            <fieldset>
+                <legend>
+                    <div id="headr" class="h3">
+                        <span style="color:#00cc00" class="glyphicon    glyphicon-user"></span>
+                        User Login
+                </div></legend>
+    
+                {% csrf_token %}
+                <input type="text" name="username" value="" size="50"   placeholder="Username" />
+                <br>
+                <input type="password" name="password" value="" size="50    " placeholder="Password" />
+                <br>
+    
+                <input type="submit" value="Login" />
+            </fieldset>
+        </form>
+
+    </body>
+</html> 

@@ -1,0 +1,1223 @@
+</html>
+<!doctype html>
+<html ng-app="crudapp">
+<head>
+    <title>Suppliers</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+
+</head>
+<style>
+.page-header { vertical-align: bottom;}
+h1 {color:#4DA820;
+    font: "Helvetica";
+    font-size: 60px;
+  }
+
+.modal-dialog{
+    position: relative;
+    display: table;
+    overflow-y: auto;    
+    overflow-x: auto;
+    width: auto;
+    min-width: 300px;
+    max-height: 300px   
+}
+</style>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="http://127.0.0.1:8000/home">Home</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Clients
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="http://127.0.0.1:8000/Morrison/campaigns">Morrisons</a></li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="/logout/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+    </ul>
+  </div>
+</nav>
+  
+<div class="container">
+  <h2><strong>Suppliers</strong></h2>
+  {% verbatim %}
+  <h4><strong>Campaign {{selectedcamp}}</strong></h4>
+  {% endverbatim %}
+  <hr>
+</div>
+
+  
+
+<div class="container">
+<body ng-controller="productController" ng-cloak onload="document.refresh();">
+
+  <div class='page-header'>
+    <div class='btn-toolbar pull-right'>
+      <div class='btn-group'>
+        <button type="button" class="btn btn-danger btn" ng-click="sub_data1()">
+          <span class="glyphicon glyphicon-floppy-disk"></span> Save Session
+        </button>
+      </div>
+    </div>
+    <h3>Existing Suppliers</h3>
+  </div>
+
+
+
+    <div ng-show="vblank">
+      <span style="font-size:20px; color:red;">There are currently no records</span>
+      <br>
+    </div>
+
+    <div ng-show="vtable">
+      {% verbatim %}
+
+
+    <table class="table table-striped table-bordered table-hover table-condensed table-responsive"  
+    cellpadding="5" cellspacing="0" border="1">
+      <thead>
+        <tr>
+          <th>Row</th>
+          <th>Precima Supplier ID</th>
+          <th>Client Number</th>
+          <th>Client Name</th>
+          <th>Submission Date</th>
+          <th>Verifier Name</th>
+          <th>Verification Date</th>
+          <th># of Offers</th>
+
+          <th><u>_Actions_</u></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="item in vendor">
+          <td>{{item.id = $index + 1}}</td>
+          <td>{{item.precimaVendorID}}</td>
+          <td>{{item.clientNumber}}</td>
+          <td>{{item.clientName}}</td>
+          <td>{{item.submissionDate}}</td>
+          <td>{{item.verifierName}}</td>
+          <td>{{item.verificationDate}}</td>
+          <td>{{item.counter}}</td>
+
+          <td>
+            <div class="btn-group" style="width: 100%;">
+              <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#selectModal" ng-click="sel_vendor(item.id)">
+                <span class="glyphicon glyphicon-menu-right"></span>
+              </button>
+              <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#edititem" ng-click="selectEdit(item.id)">
+                <span class="glyphicon glyphicon-edit"></span>
+              </button>
+              <button type="button" class="btn btn-danger btn-xs"  ng-click="del(item.id)">
+                <span class="glyphicon glyphicon-remove"></span>
+              </button>
+            </div>                    
+          </td>
+        </tr>
+    </tbody>  
+  </table>
+  {% endverbatim %}
+  
+  <br>
+ 
+
+  <div class="modal fade" id="selectModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Confirm Seletion</h4>
+        </div>
+        {% verbatim %}
+        <div class="modal-body">
+          <p>Would you like to continue with supplier {{clientname}}?</p>
+        </div>
+        {% endverbatim %}
+        <div class="modal-footer">
+        {% csrf_token %}
+          <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="sub_data()" onclick="redirect()">Yes</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+{% verbatim %}
+{% endverbatim %}
+  <br>
+  </div>
+  <!-- Modal -->
+
+    <div class="modal fade" id="edititem" role="dialog">
+        <div class="modal-dialog">
+    
+      <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    {% verbatim %}
+                    <h4 class="modal-title"><strong>Edit Vendor : {{editvendor}}</strong></h4>
+                    {% endverbatim %}
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form name="editform" method="post" role=form>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label>Submit Date:</label>
+                                        <input class="form-control" id="focusedInput" type="date" style="width:250px"; ng-model="e_subdate" />
+                                        <span style="width:250px; color:red;" class="help-block" id="e_subdate_e"></span>
+                                    </td>
+                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                    <td>
+                                        <label>Verification Date:</label> 
+                                        <input class="form-control" id="focusedInput" type="date" style="width:250px"; ng-model="e_vdate"/>
+                                        <span style="width:250px; color:red;" class="help-block" id="e_vdate_e"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Client Number:</label>
+
+                                        <input class="form-control" id="focusedInput" type="number" style="width:250px"; ng-model="e_cnum" readonly/>
+                                        <span style="width:250px; color:red;" class="help-block" id="e_cnum_e"></span>
+                                    </td>
+                                    <td>&nbsp;&nbsp;</td>
+                                    <td>
+                                        <label>Verifier Name:</label> 
+                                        <input class="form-control" id="focusedInput" type="text" style="width:250px"; ng-model="e_vname"/>
+                                        <span style="width:250px; color:red;" class="help-block" id="e_vname_e"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Client Name:</label>
+                                        <input class="form-control" id="focusedInput" type="text" style="width:250px"; ng-model="e_cname" readonly/>
+                                        <span style="width:250px; color:red;" class="help-block" id="e_cname_e"></span>
+                                    </td>
+                                    <td>&nbsp;&nbsp;</td>
+                                    <td>
+                                        <label>Max Campaign Client Fee:</label> 
+                                        <input class="form-control" id="focusedInput" type="number" style="width:250px"; ng-model="e_mccf"/>
+                                        <span style="width:250px; color:red;" class="help-block" id="e_mccf_e"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Total Client Fee:</label>
+                                        <input class="form-control" id="focusedInput" type="number" style="width:250px"; ng-model="e_tcf" />
+                                        <span style="width:250px; color:red;" class="help-block" id="e_tcf_e"></span>
+                                    </td>
+                                    <td>&nbsp;&nbsp;</td>
+                                    <td>
+                                        <label>Cost Per Delivered Offer:</label> 
+                                        <input class="form-control" id="focusedInput" type="number" style="width:250px"; ng-model="e_cpdo"/>
+                                        <span style="width:250px; color:red;" class="help-block" id="e_cpdo_e"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Precima Contact Name:</label>
+                                        <input class="form-control" id="focusedInput" type="text" style="width:250px"; ng-model="e_pcname" />
+                                        <span style="width:250px; color:red;" class="help-block" id="e_pcname_e"></span>
+                                    </td>
+                                    <td>&nbsp;&nbsp;</td>
+                                    <td>
+                                        <label>Supplier Contact Name:</label> 
+                                        <input class="form-control" id="focusedInput" type="text" style="width:250px"; ng-model="e_scname"/>
+                                        <span style="width:250px; color:red;" class="help-block" id="e_scname_e"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Precima Contact Number:</label>
+                                        <input class="form-control" id="focusedInput" type="number" style="width:250px"; ng-model="e_pcnum" />
+                                        <span style="width:250px; color:red;" class="help-block" id="e_pcnum_e"></span>
+                                    </td>
+                                    <td>&nbsp;&nbsp;</td>
+                                    <td>
+                                        <label>Supplier Contact Number:</label> 
+                                        <input class="form-control" id="focusedInput" type="number" style="width:250px"; ng-model="e_scnum"/>
+                                        <span style="width:250px; color:red;" class="help-block" id="e_scnum_e"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Precima Contact Email:</label>
+                                        <input class="form-control" id="focusedInput" type="email" style="width:250px"; ng-model="e_pcemail" />
+                                        <span style="width:250px; color:red;" class="help-block" id="e_pcemail_e"></span>
+                                    </td>
+                                    <td>&nbsp;&nbsp;</td>
+                                    <td>
+                                        <label>Supplier Contact Email:</label> 
+                                        <input class="form-control" id="focusedInput" type="email" style="width:250px"; ng-model="e_scemail"/>
+                                        <span style="width:250px; color:red;" class="help-block" id="e_scemail_e"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Parent Supplier Number:</label>
+                                        <input class="form-control" id="focusedInput" type="number" style="width:250px"; ng-model="e_psnum" />
+                                        <span style="width:250px; color:red;" class="help-block" id="e_psnum_e"></span>
+                                    </td>
+                                    <td>&nbsp;&nbsp;</td>
+                                    <td>
+                                        <label>Parent Supplier Name:</label> 
+                                        <input class="form-control" id="focusedInput" type="text" style="width:250px"; ng-model="e_psname"/>
+                                        <span style="width:250px; color:red;" class="help-block" id="e_psname_e"></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                    <div>
+                      <span  style="color:green;" class="help-block" id="saved"></span>
+                    </div>
+              </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-info" ng-click="edit()">Save Edit</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+      
+    </div>
+  </div>
+
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Create New Supplier</button>
+  <div id="demo" class="collapse">
+  <div class="jumbotron" >
+  <h3><strong>Create New Supplier</strong></h3>
+  <hr>
+    <div class="row">
+      <form name="offerform" method="post" role=form>
+
+      <div class="col-md-6">
+        <label>Submission Date:</label>
+        <input class="form-control" id="focusedInput" type="date" ng-model="sub_date" required/>
+        <span style="width:500px; color:red;" class="help-block" id="sd_error"></span>
+  
+
+        <label>Client Number:</label>
+        <div class="input-group">
+
+          <input class="form-control" id="focusedInput" type="number" ng-model="cnum" required readonly/>
+          <div class="input-group-addon" data-toggle="modal" data-target="#searchModal">
+            <span class="glyphicon glyphicon-search"></span>
+          </div>
+        </div>
+
+        <span style="width:500px; color:red;" class="help-block" id="cnum_error"></span>
+   
+
+        <label>Client Name:</label>
+        <input class="form-control" id="focusedInput" type="text" ng-model="cname" readonly/>
+        <span style="width:500px; color:red;" class="help-block" id="cname_error"></span>
+
+
+        <label>Total Client Fee:</label>
+        <input class="form-control" id="focusedInput" type="number" ng-model="tcf" />
+        <span style="width:500px; color:red;" class="help-block" id="tcf_error"></span>
+
+
+        <label>Precima Contact Name:</label>
+        <input class="form-control" id="focusedInput" type="text" ng-model="pcname" />
+        <span style="width:500px; color:red;" class="help-block" id="pcname_error"></span>
+ 
+
+        <label>Precima Contact Number:</label>
+        <input class="form-control" id="focusedInput" type="number" ng-model="pcnum" />
+        <span style="width:500px; color:red;" class="help-block" id="pcnum_error"></span>
+
+
+        <label>Precima Contact Email:</label>
+        <input class="form-control" id="focusedInput" type="email" ng-model="pcemail" />
+        <span style="width:500px; color:red;" class="help-block" id="pcemail_error"></span>
+
+        <label>Parent Supplier Number:</label>
+        <input class="form-control" id="focusedInput" type="number" ng-model="psnum" />
+        <span style="width:500px; color:red;" class="help-block" id="psnum_error"></span>
+
+      </div>
+      <div class="col-md-6">
+
+        <label>Verification Date:</label>
+        <input class="form-control" id="focusedInput" type="date" ng-model="vdate" />
+        <span style="width:500px; color:red;" class="help-block" id="vdate_error"></span>
+
+        <label>Verifier Name:</label>
+        <input class="form-control" id="focusedInput" type="text" ng-model="vname" />
+        <span style="width:500px; color:red;" class="help-block" id="vname_error"></span>
+
+        <label>Max Campaign Client Fee:</label>
+        <input class="form-control" id="focusedInput" type="number" ng-model="mccf" />
+        <span style="width:500px; color:red;" class="help-block" id="mccf_error"></span>
+
+        <label>Cost Per Delivered Offer:</label>
+        <input class="form-control" id="focusedInput" type="number" ng-model="cpdo" />
+        <span style="width:500px; color:red;" class="help-block" id="cpdo_error"></span>
+
+        <label>Supplier Contact Name:</label>
+        <input class="form-control" id="focusedInput" type="text" ng-model="scname" />
+        <span style="width:500px; color:red;" class="help-block" id="scname_error"></span>
+
+        <label>Supplier Contact Number:</label>
+        <input class="form-control" id="focusedInput" type="number" ng-model="scnum" />
+        <span style="width:500px; color:red;" class="help-block" id="scnum_error"></span>
+
+
+        <label>Supplier Contact Email:</label>
+        <input class="form-control" id="focusedInput" type="email" ng-model="scemail" />
+        <span style="width:500px; color:red;" class="help-block" id="scemail_error"></span>
+
+        <label>Parent Supplier Name:</label>
+        <input class="form-control" id="focusedInput" type="text" ng-model="psname" />
+        <span style="width:500px; color:red;" class="help-block" id="psname_error"></span>
+
+        <button type="button" class="btn btn-info pull-right" ng-click="add()" >Create Supplier</button>
+
+      </div>
+
+      </div>
+    </form>
+    </div>
+    </div>
+
+
+    </div>
+  
+      <div class="modal fade" id="searchModal" role="dialog">
+      <div class="modal-dialog">
+      
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"><strong>Search Client</strong></h4>
+          </div>
+          {% verbatim %}
+          <div class="modal-body">
+          <label>Search: <input ng-model="searchText"></label>
+            <table class="table table-striped table-bordered table-hover table-condensed table-responsive"  
+      cellpadding="5" cellspacing="0" border="1">
+              <thead>
+                <tr>
+
+                  <th>Parent Supplier #</th>
+                  <th>Parent Supplier Name</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="item in clientlist| filter:searchText">
+     
+                  <td>{{item.parent_supl_num}}</td>
+                  <td>{{item.parent_supl_name}}</td>
+                  <td>
+                    <div class="btn-group-vertical">
+                      <button type="button" class="btn btn-success btn-xs" data-toggle="modal"  ng-click="sel_client(item.parent_supl_num, item.parent_supl_name)" data-backdrop="false" data-dismiss="modal">Select Client</button>
+                  </div>                    
+                  </td>
+                </tr>
+              </tbody>  
+            </table>
+          </div>
+          {% endverbatim %}
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+  
+</body>
+
+
+</div>
+<div class="container">
+    <img src="https://www.precima.com/application/themes/Precima/images-svg/logo-barcode-only.svg"  width="304" height="236" align="left">
+</div>
+
+<input type="hidden" id="refreshed" value="no">
+<script type="text/javascript">
+  onload=function(){
+    var e=document.getElementById("refreshed");
+    if(e.value=="no")e.value="yes";
+    else{e.value="no";location.reload();}
+}
+</script>
+
+<script type="text/javascript">
+    
+  <!-- Define crudapp as a Angular application. -->
+  var crudapp = angular.module('crudapp', []);
+  
+  <!-- Application controller for the module. -->
+  crudapp.controller('productController', function($scope){
+      
+    <!-- Populate table with products data -->
+    $scope.word = localStorage.getItem('favoriteflavor');
+    $scope.vtable=false; 
+    $scope.vblank=false;
+
+    $scope.selectedcamp = {{selected_camp|safe}}
+    $scope.vendor = {{vendor_info|safe}};
+    $scope.pcid = {{selected_camp|safe}};
+    $scope.vendorlist = {{vendor_list|safe}};
+    $scope.initvendorlist = {{vendor_list|safe}};
+    $scope.clientlist = {{client_info|safe}};
+
+    $scope.insertlist = [];
+    $scope.updatelist = [];
+    $scope.deletelist = [];
+
+    
+
+    var vlen=$scope.vendor.length;
+    if (vlen!=0){
+      $scope.vtable=true; 
+      $scope.vblank=false;
+    }
+    else{
+      $scope.vtable=false; 
+      $scope.vblank=true;
+    }
+
+    $scope.sel_vendor = function(id){
+        localStorage.setItem('favoriteflavor','');
+        $scope.vendorid = $scope.vendor[id-1].precimaVendorID;
+        $scope.clientnum = $scope.vendor[id-1].clientNumber;
+        $scope.clientname = $scope.vendor[id-1].clientName;
+    };
+
+    $scope.sel_client = function(num, name){
+        $scope.cnum = num;
+        $scope.cname = name;
+        $scope.searchText = "";
+    };
+
+    $scope.sub_data = function(){
+        
+        data = {"data": [], 
+                "delete_list":$scope.deletelist,
+                "selected_vendor":$scope.vendorid, 
+                "clientnum":$scope.clientnum, 
+                "clientname":$scope.clientname};
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            url: '/vendor_receive/',
+            data: JSON.stringify(data),
+            success: function(result) {
+                    document.write(result)
+                    }
+        });
+    };
+
+    $scope.wipe = function(){
+      $scope.insertlist = [];
+      $scope.updatelist = [];
+      $scope.deletelist = [];
+      $scope.initvendorlist = $scope.vendorlist;
+        
+    };
+
+    $scope.sub_data1 = function(){
+        
+        data = {"insert_list": $scope.insertlist, 
+                "update_list":$scope.updatelist, 
+                "delete_list":$scope.deletelist, 
+                "data": $scope.vendor,
+                "selected_vendor": "none",
+                "clientnum": "", 
+                "clientname": ""};
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            url: '/vendor_receive/',
+            data: JSON.stringify(data),
+            success: function(result) {
+                    document.write(result)
+                    }
+        });
+    };
+
+    <!-- Delete function -->
+    $scope.del = function(id){
+      var result = confirm('Are you sure you want to delete this row?');
+
+      if (result==true){
+          var index = getSelectedIndex(id);
+          var pvid = $scope.vendor[index].precimaVendorID;
+          $scope.idvalue = index;
+          $scope.vendor.splice(index, 1);
+
+          if ($scope.insertlist.indexOf(pvid) > -1){
+            var ind = $scope.insertlist.indexOf(pvid);
+            $scope.insertlist.splice(ind,1);
+            var ind = $scope.vendorlist.indexOf(pvid);
+            $scope.vendorlist.splice(ind,1);
+          }
+          else if($scope.updatelist.indexOf(pvid) > -1){
+            var ind = $scope.updatelist.indexOf(pvid);
+            $scope.updatelist.splice(ind,1);
+            var ind = $scope.vendorlist.indexOf(pvid);
+            $scope.vendorlist.splice(ind,1);
+            $scope.deletelist.push(pvid);
+          }
+          else{
+            var ind = $scope.vendorlist.indexOf(pvid);
+            $scope.vendorlist.splice(ind,1);
+            $scope.deletelist.push(pvid);
+          }
+      };
+    };
+
+    <!-- Select the row of data and update the form function -->
+
+    $scope.selectEdit = function(id){
+      document.getElementById("e_subdate_e").innerHTML = "";
+      document.getElementById("e_vdate_e").innerHTML = "";
+      document.getElementById("e_cnum_e").innerHTML = "";
+      document.getElementById("e_vname_e").innerHTML = "";
+      document.getElementById("e_cname_e").innerHTML = "";
+      document.getElementById("e_pcname_e").innerHTML = "";
+      document.getElementById("e_scname_e").innerHTML = "";
+      document.getElementById("e_pcnum_e").innerHTML = "";
+      document.getElementById("e_scnum_e").innerHTML = "";
+      document.getElementById("e_pcemail_e").innerHTML = "";
+      document.getElementById("e_scemail_e").innerHTML = "";
+      document.getElementById("e_psnum_e").innerHTML = "";
+      document.getElementById("e_psname_e").innerHTML = "";
+      document.getElementById("e_mccf_e").innerHTML = "";
+      document.getElementById("saved").innerHTML = "";
+      document.getElementById("e_cpdo_e").innerHTML = "";
+
+      var index = getSelectedIndex(id);
+      var item = $scope.vendor[index];
+      
+      $scope.id = item.id;
+      $scope.idvalue = index;
+      $scope.editvendor = item.precimaVendorID;
+
+      var subdate = item.submissionDate;
+      $scope.s__date = new Date(Number(subdate.slice(0,4)),Number(subdate.slice(5,7))-1,Number(subdate.slice(8,10)));
+      
+
+      var verdate = item.verificationDate;
+      $scope.v__date = new Date(Number(verdate.slice(0,4)),Number(verdate.slice(5,7))-1,Number(verdate.slice(8,10)));
+      $scope.date = new Date(Number(verdate.slice(0,4)),Number(verdate.slice(5,7))-1,Number(verdate.slice(8,10)));
+
+      $scope.e_subdate = $scope.s__date;
+      $scope.e_vname = item.verifierName;
+      $scope.e_cnum = item.clientNumber;
+      $scope.e_vdate = $scope.v__date;
+      $scope.e_cname = item.clientName;
+      $scope.e_mccf = item.maxCampaignClientFee;
+      $scope.e_tcf = item.totalClientFee;
+      $scope.e_cpdo = item.costPerDeliveredOffer;
+      $scope.e_pcname = item.precimaContactName;
+      $scope.e_scname = item.supplierContactName;
+      $scope.e_pcnum = item.precimaContactNumber;
+      $scope.e_scnum = item.supplierContactNumber;
+      $scope.e_pcemail = item.precimaContactEmail;
+      $scope.e_scemail = item.supplierContactEmail;
+      $scope.e_psname = item.parentSupplierName;
+      $scope.e_psnum = Number(item.parentSupplierNumber);
+     }
+
+    <!-- Edit and update row function -->
+    $scope.edit = function(){
+
+      document.getElementById("e_subdate_e").innerHTML = "";
+      document.getElementById("e_vdate_e").innerHTML = "";
+      document.getElementById("e_cnum_e").innerHTML = "";
+      document.getElementById("e_vname_e").innerHTML = "";
+      document.getElementById("e_cname_e").innerHTML = "";
+      document.getElementById("e_pcname_e").innerHTML = "";
+      document.getElementById("e_scname_e").innerHTML = "";
+      document.getElementById("e_pcnum_e").innerHTML = "";
+      document.getElementById("e_scnum_e").innerHTML = "";
+      document.getElementById("e_pcemail_e").innerHTML = "";
+      document.getElementById("e_scemail_e").innerHTML = "";
+      document.getElementById("e_psnum_e").innerHTML = "";
+      document.getElementById("e_psname_e").innerHTML = "";
+      document.getElementById("e_mccf_e").innerHTML = "";
+      document.getElementById("e_cpdo_e").innerHTML = "";
+      
+      var error = false;
+
+      
+      if (!$scope.e_subdate){
+          document.getElementById("e_subdate_e").innerHTML = "This is a required field";
+          error = true;
+      }
+
+      if (!$scope.e_cnum){
+          document.getElementById("e_cnum_e").innerHTML = "This is a required field";
+          error = true;
+      }
+
+      if (!$scope.e_cname){
+          document.getElementById("e_cname_e").innerHTML = "This is a required field";
+          error = true;
+      }
+
+      if (!$scope.e_pcname){
+          document.getElementById("e_pcname_e").innerHTML = "This is a required field";
+          error = true;
+      }
+
+      if (!$scope.e_pcnum){
+          document.getElementById("e_pcnum_e").innerHTML = "This is a required field";
+          error = true;
+      }
+
+      if (!$scope.e_pcemail){
+          document.getElementById("e_pcemail_e").innerHTML = "A valid email address is required";
+          error = true;
+      }
+
+      if (!$scope.e_vname){
+          document.getElementById("e_vname_e").innerHTML = "This is a required field";
+          error = true;
+      }
+
+      if (!$scope.e_vdate){
+          document.getElementById("e_vdate_e").innerHTML = "This is a required field";
+          error = true;
+      }
+
+      if (!$scope.e_scname){
+          document.getElementById("e_scname_e").innerHTML = "This is a required field";
+          error = true;
+      }
+
+      if (!$scope.e_scnum){
+          document.getElementById("e_scnum_e").innerHTML = "This is a required field";
+          error = true;
+      }
+
+      if (!$scope.e_scemail){
+          document.getElementById("e_scemail_e").innerHTML = "A valid email address is required";
+          error = true;
+      }
+
+      if (!$scope.e_psname){
+          document.getElementById("e_psname_e").innerHTML = "This is a required field";
+          error = true;
+      }
+
+      if (!$scope.e_psnum){
+          document.getElementById("e_psnum_e").innerHTML = "This is a required field";
+          error = true;
+      }
+
+      if ($scope.e_psnum){
+        str = ($scope.e_psnum).toString();
+        ind = str.indexOf(".");
+        if (ind!=-1){
+          document.getElementById("e_psnum_e").innerHTML = "This value cannot be a decimal";
+          error = true;
+        }
+      }
+
+      if ($scope.e_psname){
+        str = ($scope.e_psname).toString();
+        if (str.length > 100){
+          document.getElementById("e_psname_e").innerHTML = "This field cannot have an input larger than 100 characters";
+          error = true;
+        }
+      }
+
+      if ($scope.e_pcname){
+        str = ($scope.e_pcname).toString();
+        if (str.length > 100){
+          document.getElementById("e_pcname_e").innerHTML = "This field cannot have an input larger than 100 characters";
+          error = true;
+        }
+      }
+
+      if ($scope.e_pcemail){
+        str = ($scope.e_pcemail).toString();
+        if (str.length > 150){
+          document.getElementById("e_pcemail_e").innerHTML = "This field cannot have an input larger than 150 characters";
+          error = true;
+        }
+      }
+
+      if ($scope.e_scname){
+        str = ($scope.e_scname).toString();
+        if (str.length > 100){
+          document.getElementById("e_scname_e").innerHTML = "This field cannot have an input larger than 100 characters";
+          error = true;
+        }
+      }
+
+      if ($scope.e_scemail){
+        str = ($scope.e_scemail).toString();
+        if (str.length > 150){
+          document.getElementById("e_scemail_e").innerHTML = "This field cannot have an input larger than 150 characters";
+          error = true;
+        }
+      }
+
+      if ($scope.e_vname){
+        str = ($scope.e_vname).toString();
+        if (str.length > 100){
+          document.getElementById("e_vname_e").innerHTML = "This field cannot have an input larger than 100 characters";
+          error = true;
+        }
+      }
+
+      if ($scope.e_mccf){
+        str = ($scope.e_mccf).toString();
+        ind = str.indexOf(".")
+        str_check1 = str.substr(0,ind);
+        str_check2 = str.substr(ind);
+        if (ind!=-1 && (str_check1.length>8 || str_check2.length>3)){
+          document.getElementById("e_mccf_e").innerHTML = "Cannot be longer than 10 digits, with 2 decimals included.";
+          error = true;
+        }
+        else if (ind==-1 && str.length>8){
+          document.getElementById("e_mccf_e").innerHTML = "This can only be 10 digits, with 2 decimals included.";
+          error = true;
+        }
+      }
+
+      if ($scope.e_cpdo){
+        str = ($scope.e_cpdo).toString();
+        ind = str.indexOf(".")
+        str_check1 = str.substr(0,ind);
+        str_check2 = str.substr(ind);
+        if (ind!=-1 && (str_check1.length>3 || str_check2.length>3)){
+          document.getElementById("e_cpdo_e").innerHTML = "Cannot be longer than 5 digits, with 2 decimals included.";
+          error = true;
+        }
+        else if (ind==-1 && str.length>3){
+          document.getElementById("e_cpdo_e").innerHTML = "This can only be 5 digits, with 2 decimals included.";
+          error = true;
+        }
+      }
+
+      if (error==false){
+
+          document.getElementById("e_subdate_e").innerHTML = "";
+          document.getElementById("e_vdate_e").innerHTML = "";
+          document.getElementById("e_cnum_e").innerHTML = "";
+          document.getElementById("e_vname_e").innerHTML = "";
+          document.getElementById("e_cname_e").innerHTML = "";
+          document.getElementById("e_pcname_e").innerHTML = "";
+          document.getElementById("e_scname_e").innerHTML = "";
+          document.getElementById("e_pcnum_e").innerHTML = "";
+          document.getElementById("e_scnum_e").innerHTML = "";
+          document.getElementById("e_pcemail_e").innerHTML = "";
+          document.getElementById("e_scemail_e").innerHTML = "";
+          document.getElementById("e_psnum_e").innerHTML = "";
+          document.getElementById("e_psname_e").innerHTML = "";
+          document.getElementById("e_mccf_e").innerHTML = "";
+          document.getElementById("e_cpdo_e").innerHTML = "";
+
+
+          var index = getSelectedIndex($scope.id);
+          //$scope.id = index;
+
+          var subdate = $scope.e_subdate;
+          var verdate = $scope.e_vdate;
+          subdate = '' + subdate.getFullYear() + "-" + ('0' + (subdate.getMonth(0) + 1)).slice(-2) + "-" + ('0' + subdate.getDate(0)).slice(-2);
+          verdate = '' + verdate.getFullYear() + "-" + ('0' + (verdate.getMonth(0) + 1)).slice(-2) + "-" + ('0' + verdate.getDate(0)).slice(-2);
+          $scope.vendor[index].submissionDate = subdate;
+          $scope.vendor[index].clientNumber = $scope.e_cnum;
+          $scope.vendor[index].clientName = $scope.e_cname;
+          $scope.vendor[index].precimaContactName = $scope.e_pcname;
+          $scope.vendor[index].precimaContactNumber = $scope.e_pcnum;
+          $scope.vendor[index].precimaContactEmail = $scope.e_pcemail;
+          $scope.vendor[index].supplierContactName = $scope.e_scname;
+          $scope.vendor[index].supplierContactNumber = $scope.e_scnum;
+          $scope.vendor[index].supplierContactEmail = $scope.e_scemail;
+          $scope.vendor[index].verifierName = $scope.e_vname;
+          $scope.vendor[index].verificationDate = verdate;
+          $scope.vendor[index].maxCampaignClientFee = $scope.e_mccf;
+          $scope.vendor[index].costPerDeliveredOffer = $scope.e_cpdo;
+          $scope.vendor[index].totalClientFee = $scope.e_tcf;
+          $scope.vendor[index].parentSupplierNumber = $scope.e_psnum;
+          $scope.vendor[index].parentSupplierName = $scope.e_psname;
+          document.getElementById("saved").innerHTML = "Information is saved, you may now close this window.";
+
+          pvid = $scope.vendor[index].precimaVendorID;
+          if ($scope.insertlist.indexOf(pvid) > -1){
+            //do nothing
+          }
+          else if ($scope.updatelist.indexOf(pvid) > -1){
+            //do nothing
+          }
+          else{
+            $scope.updatelist.push(pvid);
+          }
+      }
+    };
+ 
+    
+    <!-- Add a new product function -->
+    $scope.add = function(id){
+        document.getElementById("sd_error").innerHTML = "";
+        document.getElementById("cnum_error").innerHTML = "";
+        document.getElementById("cname_error").innerHTML = "";
+        document.getElementById("pcname_error").innerHTML = "";
+        document.getElementById("pcnum_error").innerHTML = "";
+        document.getElementById("pcemail_error").innerHTML = "";
+        document.getElementById("vname_error").innerHTML = "";
+        document.getElementById("vdate_error").innerHTML = "";
+        document.getElementById("scname_error").innerHTML = "";
+        document.getElementById("scnum_error").innerHTML = "";
+        document.getElementById("scemail_error").innerHTML = "";
+        document.getElementById("psname_error").innerHTML = "";
+        document.getElementById("psnum_error").innerHTML = "";
+        document.getElementById("vname_error").innerHTML = "";
+        document.getElementById("mccf_error").innerHTML = "";
+        document.getElementById("cpdo_error").innerHTML = "";
+
+        var error = false;
+        var str = "";
+
+        if (!$scope.sub_date){
+            document.getElementById("sd_error").innerHTML = "This is a required field";
+            error = true;
+        }
+
+        if (!$scope.cnum){
+            document.getElementById("cnum_error").innerHTML = "This is a required field";
+            error = true;
+        }
+
+        if (!$scope.cname){
+            document.getElementById("cname_error").innerHTML = "This is a required field";
+            error = true;
+        }
+
+        if (!$scope.pcname){
+            document.getElementById("pcname_error").innerHTML = "This is a required field";
+            error = true;
+        }
+
+        if (!$scope.pcnum){
+            document.getElementById("pcnum_error").innerHTML = "This is a required field";
+            error = true;
+        }
+
+        if (!$scope.pcemail){
+            document.getElementById("pcemail_error").innerHTML = "A valid email address is required";
+            error = true;
+        }
+
+
+        /////////////////////////////
+
+        if (!$scope.vname){
+            document.getElementById("vname_error").innerHTML = "This is a required field";
+            error = true;
+        }
+
+        if (!$scope.vdate){
+            document.getElementById("vdate_error").innerHTML = "This is a required field";
+            error = true;
+        }
+
+        if (!$scope.scname){
+            document.getElementById("scname_error").innerHTML = "This is a required field";
+            error = true;
+        }
+
+        if (!$scope.scnum){
+            document.getElementById("scnum_error").innerHTML = "This is a required field";
+            error = true;
+        }
+
+        if (!$scope.scemail){
+            document.getElementById("scemail_error").innerHTML = "A valid email address is required";
+            error = true;
+        }
+
+        if (!$scope.psname){
+            document.getElementById("psname_error").innerHTML = "This is a required field";
+            error = true;
+        }
+
+        if (!$scope.psnum){
+            document.getElementById("psnum_error").innerHTML = "This is a required field";
+            error = true;
+        }
+
+
+        if ($scope.psnum){
+          str = ($scope.psnum).toString();
+          ind = str.indexOf(".");
+          if (ind!=-1){
+            document.getElementById("psnum_error").innerHTML = "This value cannot be a decimal";
+            error = true;
+          }
+        }
+
+        if ($scope.psname){
+          str = ($scope.psname).toString();
+          if (str.length > 100){
+            document.getElementById("psname_error").innerHTML = "This field cannot have an input larger than 100 characters";
+            error = true;
+          }
+        }
+
+        if ($scope.pcname){
+          str = ($scope.pcname).toString();
+          if (str.length > 100){
+            document.getElementById("pcname_error").innerHTML = "This field cannot have an input larger than 100 characters";
+            error = true;
+          }
+        }
+
+        if ($scope.pcemail){
+          str = ($scope.pcemail).toString();
+          if (str.length > 150){
+            document.getElementById("pcemail_error").innerHTML = "This field cannot have an input larger than 150 characters";
+            error = true;
+          }
+        }
+
+        if ($scope.scname){
+          str = ($scope.scname).toString();
+          if (str.length > 100){
+            document.getElementById("scname_error").innerHTML = "This field cannot have an input larger than 100 characters";
+            error = true;
+          }
+        }
+
+        if ($scope.scemail){
+          str = ($scope.scemail).toString();
+          if (str.length > 150){
+            document.getElementById("scemail_error").innerHTML = "This field cannot have an input larger than 150 characters";
+            error = true;
+          }
+        }
+
+        if ($scope.vname){
+          str = ($scope.vname).toString();
+          if (str.length > 100){
+            document.getElementById("vname_error").innerHTML = "This field cannot have an input larger than 100 characters";
+            error = true;
+          }
+        }
+
+        if ($scope.mccf){
+          str = ($scope.mccf).toString();
+          ind = str.indexOf(".")
+          str_check1 = str.substr(0,ind);
+          str_check2 = str.substr(ind);
+          if (ind!=-1 && (str_check1.length>8 || str_check2.length>3)){
+            document.getElementById("mccf_error").innerHTML = "Cannot be longer than 10 digits, with 2 decimals included.";
+            error = true;
+          }
+          else if (ind==-1 && str.length>8){
+            document.getElementById("mccf_error").innerHTML = "This can only be 10 digits, with 2 decimals included.";
+            error = true;
+          }
+        }
+
+        if ($scope.cpdo){
+          str = ($scope.cpdo).toString();
+          ind = str.indexOf(".")
+          str_check1 = str.substr(0,ind);
+          str_check2 = str.substr(ind);
+          if (ind!=-1 && (str_check1.length>3 || str_check2.length>3)){
+            document.getElementById("cpdo_error").innerHTML = "Cannot be longer than 5 digits, with 2 decimals included.";
+            error = true;
+          }
+          else if (ind==-1 && str.length>3){
+            document.getElementById("cpdo_error").innerHTML = "This can only be 5 digits, with 2 decimals included.";
+            error = true;
+          }
+        }
+
+        ////////////////////////////////
+
+        var pvid = $scope.pcid + "-" + $scope.cnum;
+        if ($scope.vendorlist.indexOf(pvid) > -1){
+            document.getElementById("cnum_error").innerHTML = "This vendor already exists. Please ensure you insert a new vendor.";
+            error = true;
+        }
+        
+        if (error == false){
+          $scope.vblank = false;
+          $scope.vtable = true;
+          document.getElementById("sd_error").  innerHTML = "";
+          document.getElementById("cnum_error").  innerHTML = "";
+          document.getElementById("cname_error").  innerHTML = "";
+          document.getElementById("pcname_error").  innerHTML = "";
+          document.getElementById("pcnum_error").  innerHTML = "";
+          document.getElementById("pcemail_error").  innerHTML = "";
+          document.getElementById("vname_error").  innerHTML = "";
+          document.getElementById("vdate_error").  innerHTML = "";
+          document.getElementById("scname_error").  innerHTML = "";
+          document.getElementById("scnum_error").  innerHTML = "";
+          document.getElementById("scemail_error").  innerHTML = "";
+          document.getElementById("psname_error").  innerHTML = "";
+          document.getElementById("psnum_error").  innerHTML = "";
+          document.getElementById("mccf_error").  innerHTML = "";
+          document.getElementById("cpdo_error").  innerHTML = "";
+
+          var subdate = $scope.sub_date;
+          var verdate = $scope.vdate;
+          subdate = '' + subdate.getFullYear() + "-" + ('0' + (subdate.getMonth(0) + 1)).slice(-2) + "-" + ('0' + subdate.getDate(0)).slice(-2);
+          verdate = '' + verdate.getFullYear() + "-" + ('0' + (verdate.getMonth(0) + 1)).slice(-2) + "-" + ('0' + verdate.getDate(0)).slice(-2);
+
+          $scope.vendor.push({
+              precimaCampaignID: $scope.pcid,
+              submissionDate:subdate,
+              clientNumber:$scope.cnum,
+              clientName:$scope.cname,
+              precimaContactName:$scope.pcname,
+              precimaContactNumber:$scope.pcnum,
+              precimaContactEmail:$scope.pcemail,
+              supplierContactName:$scope.scname,
+              supplierContactNumber:$scope.scnum,
+              supplierContactEmail:$scope.scemail,
+              verifierName:$scope.vname,
+              verificationDate:verdate,
+              precimaVendorID:pvid,
+              maxCampaignClientFee:$scope.mccf,
+              costPerDeliveredOffer:$scope.cpdo,
+              totalClientFee:$scope.tcf,
+              parentSupplierNumber: $scope.psnum,
+              parentSupplierName: $scope.psname,
+              counter: '0'
+
+          });
+
+          $scope.vendorlist.push(pvid);
+
+
+        <!-- Resets the form -->
+        $scope.sub_date = '';
+        $scope.cnum = '';
+        $scope.cname = '';
+        $scope.pcname = '';
+        $scope.pcnum = '';
+        $scope.pcemail = '';
+        $scope.scname = '';
+        $scope.scnum = '';
+        $scope.scemail = '';
+        $scope.vname = '';
+        $scope.vdate = '';
+        $scope.mccf = '';
+        $scope.cpdo = '';
+        $scope.tcf = '';
+        $scope.psnum = "";
+        $scope.psname = "";
+
+        if($scope.deletelist.indexOf(pvid) > -1){
+          var ind = $scope.deletelist.indexOf(pvid);
+          $scope.deletelist.splice(ind,1);
+          $scope.updatelist.push(pvid)
+        }
+        else{
+          $scope.insertlist.push(pvid);
+        }
+    };
+    }
+
+    <!-- Function finds unique product data based on its id -->
+    function getSelectedIndex(id){
+        for(var i=0; i<$scope.vendor.length; i++)
+            if($scope.vendor[i].id==id)
+                return i;
+            return -1;  
+    };
+
+
+
+    function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+      crossDomain: false, // obviates need for sameOrigin test
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type)) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }         
+  })
+
+});
+</script>
+
+
+<script>
+
+window.onbeforeunload = function (evt) {
+  var message = 'Are you sure you want to leave?';
+  if (typeof evt == 'undefined') {
+    evt = window.event;
+  }
+  if (evt) {
+    evt.returnValue = message;
+  }
+  return message;
+}
+</script>
+
+<script type="text/javascript">
+  function redirect() {
+
+   setTimeout(function(){
+    window.location.href='offers';
+  },1000);
+    // cancel default behavior
+  };
+
+</script>
+
+</html>

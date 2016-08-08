@@ -1,0 +1,175 @@
+</html>
+<!doctype html>
+<html ng-app="crudapp">
+<head>
+    <title>File Download</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+
+</head>
+<style>
+.page-header { vertical-align: bottom;}
+h1 {color:#4DA820;
+    font: "Helvetica";
+    font-size: 60px;
+  }
+
+.modal-dialog{
+    position: relative;
+    display: table;
+    overflow-y: auto;    
+    overflow-x: auto;
+    width: auto;
+    min-width: 300px;
+    max-height: 300px   
+}
+</style>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="http://127.0.0.1:8000/home">Home</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Clients
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="http://127.0.0.1:8000/Morrison/campaigns">Morrisons</a></li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="/logout/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+    </ul>
+  </div>
+</nav>
+  
+<div class="container">
+
+</div>
+
+<div class="container">
+<body ng-controller="productController">
+
+
+    <br>
+    <br>
+    <p>The file is currently being generated and the download should start shortly. If it doesn't, click
+    <a data-auto-download href="/static/export.xlsx">here</a>.</p>
+    
+    <div class="progress" style="width:60%">
+      <div download-bar id="myBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
+    </div>
+    <div class="downloadProject"></div>
+
+
+</body>  
+</div>
+<div class="container">
+    <img src="https://www.precima.com/application/themes/Precima/images-svg/logo-barcode-only.svg"  width="304" height="236" align="left">
+</div>
+
+
+
+
+<script type="text/javascript">
+    
+  <!-- Define crudapp as a Angular application. -->
+  var crudapp = angular.module('crudapp', []);
+  
+  <!-- Application controller for the module. -->
+  crudapp.controller('productController', function($scope){
+      
+
+    $scope.sub_data = function(){
+        
+        data = {"data": $scope.new_campaigns, "selected":$scope.data};
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            url: '/campaign_receive/',
+            data: JSON.stringify(data),
+            success: function(result) {
+                    document.write(result)
+                    }
+        });
+    };            
+    
+    function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+      crossDomain: false, // obviates need for sameOrigin test
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type)) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }         
+  })
+});
+</script>
+
+<script>
+
+$(function() {
+
+  var elem = document.getElementById("myBar");
+  var width = 1;
+  var id = setInterval(frame, 95);
+  function frame() {
+    if (width >= 100) {
+      clearInterval(id);
+    } else {
+      width++;
+      elem.style.width = width + '%';
+    }
+  }
+
+});
+
+
+$(function() {
+   $(window).bind('load', function() {
+
+      setTimeout(function() {
+        $("div.downloadProject").delay(200).append('<iframe width="0" height="0" frameborder="0" src="/static/export.xlsx"></iframe>'); 
+      }, 10000);
+  })
+});
+</script>
+
+</html>
