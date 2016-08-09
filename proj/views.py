@@ -75,7 +75,7 @@ def campaign_send(request):
 
 	#grabbing all the different type of campaigns and their descriptive names
 	# HD- camapign_list is being refered from which table?
-	cur.execute("SELECT * FROM CAMPAIGN_LIST;")  
+	cur.execute("select * from campaign_list;")  
 	desc = cur.description
 	column_names = [col[0] for col in desc]
 	result = cur.fetchall()
@@ -159,7 +159,7 @@ def campaign_receive(request):
 	
 			for line in insert_np:
 
-				insert_sql = "INSERT INTO campaign_information " + column_names + " values (" \
+				insert_sql = "insert into campaign_information " + column_names + " values (" \
 						+ "'" + line[0] \
 						+ "','" + line[1] \
 						+ "','" + line[2] \
@@ -216,7 +216,7 @@ def vendor_send(request):
 
 
    	#generating list of all suppliers 
-	clients_sql = "SELECT DISTINCT parent_supl_num, parent_supl_name FROM clients"
+	clients_sql = "select distinct parent_supl_num, parent_supl_name from clients"
 	cur.execute(clients_sql)  
 	desc = cur.description
 	column_names = [col[0] for col in desc]
@@ -317,7 +317,7 @@ def vendor_receive(request):
 					
 					for line in insert_np:
 							i = 1
-							insert_sql = "INSERT INTO vendor_info " + insert_col + " values ("
+							insert_sql = "insert into vendor_info " + insert_col + " values ("
 							print insert_sql
 
 							val = ""
@@ -391,7 +391,7 @@ def vendor_receive(request):
 				cur = db.cursor()
 				
 				for item in delete_list:
-					delete_sql = "DELETE FROM vendor_info WHERE precimaVendorID='"
+					delete_sql = "delete from vendor_info where precimaVendorID='"
 					delete_sql = delete_sql + str(item) + "';\n"
 				
 					print "\n" + delete_sql
@@ -574,7 +574,7 @@ def offer_receive(request):
 					for line in update_np:
 							i2 = 0
 							i = 1
-							update_sql = "UPDATE offer_info SET "
+							update_sql = "update offer_info SET "
 							good_values = 0
 							for item in line:
 								if (str(item)!='None' and str(item)!='nan'):
@@ -611,7 +611,7 @@ def offer_receive(request):
 				cur = db.cursor()
 
 				for item in delete_list:
-					delete_sql = "DELETE FROM offer_info WHERE precimaOfferID='"
+					delete_sql = "delete from offer_info where precimaOfferID='"
 					delete_sql = delete_sql + str(item) + "';\n"
 				
 					print "\n" + delete_sql
@@ -643,7 +643,7 @@ def product_send(request):
 			clientnum = target.clientnum
 			offernum = target.offernum
 
-	product_sql = "SELECT * FROM SKU_INFO WHERE precimaOfferID="
+	product_sql = "select * from sku_info precimaOfferID="
 	product_sql = product_sql + "\'" + selected_offer + "\';\n"
 	
 	cur.execute(product_sql)  
@@ -656,9 +656,9 @@ def product_send(request):
 	for item in result:
     		product_list.append(item[3])
 
-   	item_sql = "SELECT item as itemno, ean, item_desc, div_name, grp_name, dept_name, " \
+   	item_sql = "select item as itemno, ean, item_desc, div_name, grp_name, dept_name, " \
    				+ "class_name, subclass_name, brand_desc " \
-   				+ "FROM item WHERE " \
+   				+ "from item where " \
    				+ "parent_supl_num ='" + clientnum + "';"
 
    	cur.execute(item_sql)
@@ -749,7 +749,7 @@ def product_receive(request):
 					
 					for line in insert_np:
 							i = 1
-							insert_sql = "INSERT INTO sku_info " + insert_col + " values ("
+							insert_sql = "insert into sku_info " + insert_col + " values ("
 							print insert_sql
 
 							val = ""
@@ -787,7 +787,7 @@ def product_receive(request):
 					for line in update_np:
 							i2 = 0
 							i = 1
-							update_sql = "UPDATE sku_info SET "
+							update_sql = "update sku_info set "
 							good_values = 0
 							for item in line:
 								if (str(item)!='None' and str(item)!='nan'):
@@ -824,7 +824,7 @@ def product_receive(request):
 				cur = db.cursor()
 
 				for item in delete_list:
-					delete_sql = "DELETE FROM vendor_info WHERE precimaSkuID='"
+					delete_sql = "delete from vendor_info where precimaSkuID='"
 					delete_sql = delete_sql + str(item) + "';\n"
 				
 					print "\n" + delete_sql
@@ -843,7 +843,7 @@ def test(request):
 		db = mysqldb)
 
 	cur = db.cursor()
-	cur.execute("SELECT * FROM vendor_info")  
+	cur.execute("select * from vendor_info")  
 	desc = cur.description
 	column_names = [col[0] for col in desc]
 	result = cur.fetchall()
