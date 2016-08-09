@@ -643,7 +643,7 @@ def product_send(request):
 			clientnum = target.clientnum
 			offernum = target.offernum
 
-	product_sql = "select * from sku_info precimaOfferID="
+	product_sql = "select * from sku_info where precimaOfferID="
 	product_sql = product_sql + "\'" + selected_offer + "\';\n"
 	
 	cur.execute(product_sql)  
