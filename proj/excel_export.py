@@ -18,10 +18,10 @@ import pandas as pd
 
 def export_file(selected_vendor):
 
-mysqlhost = "djangomysqltest.ckeqhtrt4wyd.us-west-2.rds.amazonaws.com"
-mysqluser = "morrisons"
-mysqlpw = "morrisons"
-mysqldb = "usf"
+     mysqlhost = "djangomysqltest.ckeqhtrt4wyd.us-west-2.rds.amazonaws.com"
+     mysqluser = "morrisons"
+     mysqlpw = "morrisons"
+     mysqldb = "usf"
      
     db = MySQLdb.connect(host = mysqlhost,
             user = mysqluser,
