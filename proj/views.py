@@ -982,6 +982,7 @@ def excel_file(request):
 		print data
 		target = current.objects.all()[0]
 		selected_vendor = target.vendor_id
+		print selected_vendor
 		excel_export.export_file(selected_vendor)
 	
 
